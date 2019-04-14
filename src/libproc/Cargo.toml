@@ -1,8 +1,15 @@
+[[bin]]
+path="./bin/proc.rs"
+name="proc"
+
 [lib]
-path = "./lib.rs"
+path="./lexer.rs"
 
 [package]
 name = "libproc"
 version = "0.1.0"
 authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"
+
+[dependencies]
+dirs = "1.0.5"
