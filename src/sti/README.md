@@ -68,7 +68,7 @@ mod list {
     impl List {
         fn is_expr(self) -> bool;
         fn is_ltrl(self) -> bool;
-        fn eval(self) -> Result<(), Err>;
+        fn is_eval<T>(self) -> Result<T, Err>;
     }
 }
 ```
@@ -76,7 +76,7 @@ mod list {
 ## AST
 
 ```rust
-enum Expression {
+enum Expr {
     Eval,
     Lambda,
     Condition,

@@ -20,3 +20,4 @@
 /// Punct Punct Punct Literal Literal Punct Punct Punct Literal Literal Punct
 /// Punct Punct Literal Literal Punct Punct Punct Literal Literal Punct Punct
 /// ```
+pub struct Parser;

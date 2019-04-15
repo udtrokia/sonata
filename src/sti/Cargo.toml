@@ -1,12 +1,12 @@
 [[bin]]
-path="./bin/proc.rs"
-name="proc"
+path="./bin/sti.rs"
+name="sti"
 
 [lib]
-path="./lexer.rs"
+path="./bridge.rs"
 
 [package]
-name = "libproc"
+name = "sti"
 version = "0.1.0"
 authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"

@@ -76,7 +76,7 @@ mod list {
 ## AST
 
 ```rust
-enum Expression {
+enum Expr {
     Eval,
     Lambda,
     Condition,
