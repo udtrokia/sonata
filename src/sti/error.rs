@@ -1,4 +1,4 @@
 #[derive(Debug)]
-pub enum TokenTreeError {
-    GroupError,
+pub enum LexerError {
+    LexerError,
 }

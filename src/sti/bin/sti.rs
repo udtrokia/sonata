@@ -19,11 +19,5 @@ fn main() {
         )
     );
 
-    println!("{:?}", String::from_utf8(content.to_owned()).unwrap());
-    
-    for tt in ts.into_iter() {
-        match tt {
-            _ => println!("{:?}", tt)
-        }
-    }
+    ts.spwan(|x| println!("{:?}", x));
 }

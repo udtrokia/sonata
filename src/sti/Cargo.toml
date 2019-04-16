@@ -3,7 +3,7 @@ path="./bin/sti.rs"
 name="sti"
 
 [lib]
-path="./bridge.rs"
+path="./lib.rs"
 
 [package]
 name = "sti"

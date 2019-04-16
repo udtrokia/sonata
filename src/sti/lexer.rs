@@ -10,14 +10,11 @@
 ///
 /// @inputs:  token stream.
 /// @outputs: primitive tokentree.
-pub struct Cons(pub &'static [u8]);
-pub struct Symbol(pub &'static [u8]);
-pub struct Number(pub &'static [u8]);
-
 macro_rules! debug {
     (
         $($tt: ident,)+
     ) => {
+        $(pub struct $tt(pub &'static [u8]);)+   
         $(impl std::fmt::Debug for $tt {
             fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
                 write!(f, "{}", String::from_utf8(self.0.to_vec()).unwrap())
@@ -25,13 +22,14 @@ macro_rules! debug {
         })+
     }
 }
-debug!{Cons, Symbol, Number,}
+debug!{Ident, Group, Punct, Literal, }
 
 #[derive(Debug)]
 pub enum TokenTree {
-    Cons(Cons),
-    Symbol(Symbol),
-    Number(Number)
+    Ident(Ident),
+    Group(Group),
+    Punct(Punct),
+    Literal(Literal)
 }
 
 /// # TokenStream
@@ -43,7 +41,7 @@ pub enum TokenTree {
 pub struct TokenStream(pub &'static [u8]);
 
 mod token_stream {
-    use super::{TokenTree, Cons, Symbol, Number};
+    use super::{TokenTree, Ident, Group, Punct, Literal};
     pub struct LexerIter( pub usize, pub &'static [u8]);
 
     impl LexerIter {
@@ -66,13 +64,15 @@ mod token_stream {
             self.0 += 1;
             
             let ret = match ch {
-                b'(' => {
+                b'(' | b'[' | b'{' => {
                     let begin = self.0;
-                    let end = self.tok_end(|x| x == b')') + 1;
+                    let end = self.tok_end(|x| {
+                        x == b')'|| x == b']' || x == b'}'
+                    }) + 1;
                     self.0 = end;
                     self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
 
-                    Some(TokenTree::Cons(Cons(&self.1[(begin -1)..end])))
+                    Some(TokenTree::Group(Group(&self.1[(begin -1)..end])))
                 },
                 b'"' => {
                     let begin = self.0;
@@ -80,7 +80,15 @@ mod token_stream {
                     self.0 = end;
                     self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
 
-                    Some(TokenTree::Symbol(Symbol(&self.1[(begin -1)..end])))
+                    Some(TokenTree::Literal(Literal(&self.1[(begin -1)..end])))
+                },
+                b';' => {
+                    let begin = self.0;
+                    let end = self.tok_end(|x| x == b'\n');
+                    self.0 = end;
+                    self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
+
+                    Some(TokenTree::Ident(Ident(&self.1[(begin -1)..end])))
                 },
                 x if x.is_ascii_alphanumeric() => {
                     let begin = self.0;
@@ -88,15 +96,23 @@ mod token_stream {
                     self.0 = end;
                     self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
                     
-                    Some(TokenTree::Number(Number(&self.1[(begin-1)..end])))
-                }
+                    Some(TokenTree::Literal(Literal(&self.1[(begin-1)..end])))
+                },
+                x if x.is_ascii_punctuation() => {
+                    let begin = self.0;
+                    let end = self.tok_end(|x| x.is_ascii_whitespace());
+                    self.0 = end;
+                    self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
+                    
+                    Some(TokenTree::Punct(Punct(&self.1[(begin-1)..end])))
+                },
                 _ => {
                     let begin = self.0;
                     let end = self.tok_end(|x| x.is_ascii_whitespace());
                     self.0 = end;
                     self.0 = self.tok_end(|x| !x.is_ascii_whitespace());
                     
-                    Some(TokenTree::Symbol(Symbol(&self.1[(begin-1)..end])))
+                    Some(TokenTree::Literal(Literal(&self.1[(begin-1)..end])))
                 },
             };
             ret
@@ -111,5 +127,11 @@ impl IntoIterator for TokenStream {
 
     fn into_iter(self) -> Self::IntoIter {
         LexerIter(0, self.0).into_iter()
+    }
+}
+
+impl TokenStream {
+    pub fn spwan<F: Fn(TokenTree)>(self, cb: F) {
+        for tt in self.into_iter() { cb(tt) }
     }
 }
