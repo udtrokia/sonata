@@ -1,9 +1,9 @@
 [[bin]]
-path="./bin/sti.rs"
-name="sti"
+path="./bin/stx.rs"
+name="stx"
 
 [lib]
-path="./lib.rs"
+path="./bridge.rs"
 
 [package]
 name = "sti"

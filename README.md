@@ -2,29 +2,7 @@
 
 Abstract unconstrained sonata in s-expr.
 
-## Lexer
-
-```rust
-enum TokenTree {
-  Ident,
-  Group,
-  Punct,
-  Literal,
-}
-
-match stream.spawn() {
-    b';' => Ident,
-    b'(...)' => Group,
-    b'[...]' => Group,
-    b'{...}' => Group,
-    b'[+...]' => Punct,
-    b'[0-9]+' => Literal,
-    b'[A-Za-z].*' => Literal,
-    _ => Literal
-}
-```
-
-## Typeck
+## Atom
 
 ```rust
 /// ;expression
@@ -50,8 +28,8 @@ match stream.spawn() {
 ///
 /// ;punct
 /// b'+' => Operator("+"),     //::= Expr(add)       ~> itlr | item | number
-/// b'-' => Operator("-"),     //::= Expr(minus)     ~> itlr | item | number
-/// b'*' => Operator("*"),     //::= Expr(multiply)  ~> itlr | item | number
+/// b'-' => Operator("-"),     //::= Expr(mins)      ~> itlr | item | number
+/// b'*' => Operator("*"),     //::= Expr(multipl)   ~> itlr | item | number
 /// b'/' => Operator("/"),     //::= Expr(except)    ~> itlr | item | number
 /// b'>' => Operator(">"),     //::= Expr(gt)        ~> itlr | item | bool
 /// b'=' => Operator("="),     //::= Expr(eq)        ~> itlr | item | bool
@@ -104,11 +82,4 @@ match stream.spawn() {
 /// symbol(')            ::= ident | literal
 /// symbol(")            ::= ident | string
 /// symbol(#)            ::= ident | super
-enum Atom {
-    Number,
-    Symbol,
-}
-
-struct Cons(Atom, Atom);
-struct Expr(Atom, Cons);
 ```
