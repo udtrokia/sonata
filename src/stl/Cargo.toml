@@ -1,12 +1,12 @@
 [[bin]]
-path="./bin/stx.rs"
-name="stx"
+path="./bin/stl.rs"
+name="stl"
 
 [lib]
-path="./bridge.rs"
+path="./lexer.rs"
 
 [package]
-name = "sti"
+name = "stl"
 version = "0.1.0"
 authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"
