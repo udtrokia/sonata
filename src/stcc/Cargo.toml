@@ -1,12 +1,12 @@
 [[bin]]
-path="./bin/stl.rs"
-name="stl"
+path="./bin/stcc.rs"
+name="stcc"
 
 [lib]
 path="./lexer.rs"
 
 [package]
-name = "stl"
+name = "stcc"
 version = "0.1.0"
 authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"

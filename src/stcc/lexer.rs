@@ -1,4 +1,3 @@
-/// Token
 mod stream;
 use stream::Stream;
 
@@ -20,3 +19,6 @@ impl Cons<&'static [u8], &'static [u8]> for &'static [u8] {
         &self[self.cons().1..]
     }
 }
+
+#[allow(dead_code)]
+mod ast;
