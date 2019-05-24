@@ -1,4 +1,4 @@
-use stcc::Cons;
+use stcc::Stream;
 
 fn main() {
     let stream = b"(: hello)";

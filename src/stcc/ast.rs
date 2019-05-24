@@ -1,27 +1,24 @@
 // Candy Crash
-type Num = &'static [u8];
-type Item = &'static [u8];
-type Ident = &'static [u8];
-type Annotate = (&'static [u8]);
-
 pub trait AST {
-    fn nums(self) -> (&'static [u8], String);
+    fn nums(self) -> (&'static [u8], &'static [u8]);
     fn item(self) -> (&'static [u8]);
     fn crash<T>(self) -> T;
 }
 
 impl AST for &'static [u8] {
-    fn nums(self) -> (&'static [u8], String) {
-        let s = String::from_utf8(self.to_vec()).unwrap();
-        let o = s.find('_');
+    fn nums(self) -> (&'static [u8], &'static [u8]) {
+        let s = self;
+        let o = s.iter().enumerate()
+            .find(|(_, x)| x == &&b'_')
+            .unwrap_or((0, &b'0')).0;
 
-        match o.is_none() {
-            true => (self, "i32".to_string()),
-            false => (&self[..o.unwrap()], s[(o.unwrap() + 1)..].to_string())
+        match o == 0 {
+            true => (self, b"i32"),
+            false => (&self[..o], &s[(o + 1)..])
         }
     }
 
-    fn item(self) -> Item {
+    fn item(self) -> &'static [u8] {
         unimplemented!()
     }
 

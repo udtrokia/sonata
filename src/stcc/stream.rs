@@ -1,12 +1,12 @@
 /// # Stream
-/// at   => point the end of predication
-/// cons => convert stream to cons
-pub trait Stream<T> {
+/// + at   => point the end of predication
+/// + cons => convert stream to cons
+trait StreamTrait<T> {
     fn at<F: Fn(u8) -> bool>(self, begin: usize, predicate: F)  -> usize;
     fn cons(self) -> (&'static [T], usize);
 }
 
-impl Stream<u8> for &'static [u8] {
+impl StreamTrait<u8> for &'static [u8] {
     fn at<F: Fn(u8) -> bool>(self, begin: usize, predicate: F)  -> usize {
         self[begin..].iter().enumerate()
             .find(|(_, &x)| predicate(x))
@@ -50,3 +50,26 @@ impl Stream<u8> for &'static [u8] {
         }
     }
 }
+
+/// High level Stream.
+pub(crate) mod cons {
+    use crate::stream::StreamTrait;
+    /// # Cons - (A)ddress && (D)ecrement
+    /// (list 1 2 3)  
+    /// (cons 1 (cons 2 (cons 3 nil)))
+    pub trait ConsTrait<A, D> {
+        fn car(self) -> A;
+        fn cdr(self) -> D;
+    }
+
+    impl ConsTrait<&'static [u8], &'static [u8]> for &'static [u8] {
+        fn car(self) -> &'static [u8] {
+            self.cons().0
+        }
+
+        fn cdr(self) -> &'static [u8] {
+            &self[self.cons().1..]
+        }
+    }
+}
+pub use cons::ConsTrait;
