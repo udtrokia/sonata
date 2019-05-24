@@ -1,6 +1,37 @@
-# sonata
+# sonata 
+[![doc](https://img.shields.io/badge/0.1.0-docs-green.svg)](https://docs.rs/sonata)
+[![Crates.io](https://img.shields.io/crates/v/sonata.svg)](https://crates.io/crates/sonata)
+[![Crates.io](https://img.shields.io/crates/d/sonata.svg)](https://crates.io/crates/sonata)
+[![LICENSE](https://img.shields.io/crates/l/sonata.svg)](https://choosealicense.com/licenses/mit/)
 
 Abstract unconstrained sonata in s-expr.
+
+## Cons
+
+Serialize sonata into cons-operating.
+
+```rust
+#[test]
+fn test_cons() {
+    let stream = b"(: hello)";    
+    assert_eq!(b": hello", stream.car());
+    assert_eq!(b"", stream.cdr());
+    assert_eq!(b":", stream.car().car());
+    assert_eq!(b"hello", stream.car().cdr());
+    assert_eq!(b"", stream.cdr().car());
+    assert_eq!(b"", stream.cdr().cdr());
+}
+
+#[test]
+fn test_list() {
+    let stream = b"(: > !)";
+    assert_eq!(b": > !", stream.car());          // [0]
+    assert_eq!(b":", stream.car().car());        // [0, 0]
+    assert_eq!(b"> !", stream.car().cdr());      // [0, 1]
+    assert_eq!(b">", stream.car().cdr().car());  // [0, 1, 0]
+    assert_eq!(b"!", stream.car().cdr().cdr());  // [0, 1, 1]
+}
+```
 
 ## Atom
 

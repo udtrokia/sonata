@@ -1,10 +1,11 @@
-use crate::tyck::AD;
-use crate::tyck::Address;
-use crate::tyck::Decrement;
-use crate::cons::ConsTrait;
+use super::tyck::AD;
+use super::tyck::Address;
+use super::tyck::Decrement;
+use super::cons::ConsTrait;
 
 /// # Address-Decrement Tree
 /// kind of binary tree, implementend without `struct`.
+/// 
 /// # Examples
 /// ```
 /// let cons_set = [

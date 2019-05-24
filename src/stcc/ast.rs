@@ -1,4 +1,4 @@
-use crate::tyck::Num;
+use super::tyck::Num;
 
 // Candy Crash
 pub trait AST {

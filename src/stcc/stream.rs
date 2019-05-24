@@ -1,8 +1,8 @@
-use crate::tyck::Atom;
+use crate::stcc::tyck::Atom;
 /// # Stream
 /// + at   => point the end of predication
 /// + cons => convert stream to cons
-pub(crate) trait StreamTrait<T> {
+pub(super) trait StreamTrait<T> {
     fn at<F: Fn(u8) -> bool>(self, begin: usize, predicate: F)  -> usize;
     fn cons(self) -> (&'static [T], &'static [T]);
 }
