@@ -83,3 +83,8 @@ Abstract unconstrained sonata in s-expr.
 /// symbol(")            ::= ident | string
 /// symbol(#)            ::= ident | super
 ```
+
+## LICENSE
+[MIT][1]
+
+[1]: https://choosealicense.com/licenses/mit/
