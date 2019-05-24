@@ -2,7 +2,7 @@ use crate::tyck::Atom;
 /// # Stream
 /// + at   => point the end of predication
 /// + cons => convert stream to cons
-trait StreamTrait<T> {
+pub(crate) trait StreamTrait<T> {
     fn at<F: Fn(u8) -> bool>(self, begin: usize, predicate: F)  -> usize;
     fn cons(self) -> (&'static [T], &'static [T]);
 }
@@ -32,7 +32,11 @@ impl StreamTrait<u8> for &'static [u8] {
                     end = self.at(pos, |x| x == b')') + 1;
                 }
 
-                self[begin..(end - 1)].cons()
+                let mut _end = end;
+                _end = self.at(end, |x| !x.is_ascii_whitespace());
+                
+                (&self[begin..(end - 1)], &self[_end..])
+                // self[begin..(end - 1)].cons()
             },
             b'"' => {
                 let begin = pos;
@@ -45,6 +49,10 @@ impl StreamTrait<u8> for &'static [u8] {
                 let end = self.at(pos, |x| x == b'\n');
                 (&self[(pos - 1)..end], &self[end..])
             },
+            x if x.is_ascii_whitespace() => {
+                let end = self.at(pos, |x| !x.is_ascii_whitespace());
+                self[end..].cons()
+            },
             _ => {
                 let begin = pos;
                 let end = self.at(pos, |x| x.is_ascii_whitespace());
@@ -55,39 +63,3 @@ impl StreamTrait<u8> for &'static [u8] {
         }
     }
 }
-
-/// High level Stream.
-/// # Cons - (A)ddress && (D)ecrement
-/// __(1 2 3)__ means: (cons 1 (cons 2 (cons 3 nil)))
-pub(crate) mod cons {
-    use crate::tyck::Atom;
-    use crate::stream::StreamTrait;
-
-    /// # Example
-    /// ```rust
-    /// use stcc::Stcc;
-    /// 
-    /// #[test]
-    /// fn test_cons() {
-    ///     let stream = b"(: hello)";    
-    ///     assert_eq!(b":", stream.car());
-    ///     assert_eq!(b"hello", stream.cdr());
-    ///     // ...
-    /// }
-    /// ```
-    pub trait ConsTrait<A, D> {
-        fn car(self) -> A;
-        fn cdr(self) -> D;
-    }
-
-    impl ConsTrait<Atom,  Atom> for &'static [u8] {
-        fn car(self) -> Atom {
-            self.cons().0
-        }
-
-        fn cdr(self) -> Atom {
-            self.cons().1
-        }
-    }
-}
-pub use cons::ConsTrait;

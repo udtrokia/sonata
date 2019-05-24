@@ -1,12 +1,14 @@
+use crate::tyck::Num;
+
 // Candy Crash
 pub trait AST {
-    fn nums(self) -> (&'static [u8], &'static [u8]);
+    fn num(self) -> Num;
     fn item(self) -> (&'static [u8]);
     fn crash<T>(self) -> T;
 }
 
 impl AST for &'static [u8] {
-    fn nums(self) -> (&'static [u8], &'static [u8]) {
+    fn num(self) -> Num {
         let s = self;
         let o = s.iter().enumerate()
             .find(|(_, x)| x == &&b'_')
