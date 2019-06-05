@@ -1,7 +1,4 @@
-use super::tyck::AD;
-use super::tyck::Address;
-use super::tyck::Decrement;
-use super::cons::ConsTrait;
+use cons::Cons;
 
 /// # Address-Decrement Tree
 /// kind of binary tree, implementend without `struct`.

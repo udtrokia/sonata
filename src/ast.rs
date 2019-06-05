@@ -1,4 +1,4 @@
-use super::tyck::Num;
+type Num = (&'static [u8], &'static [u8]);
 
 // Candy Crash
 pub trait AST {
